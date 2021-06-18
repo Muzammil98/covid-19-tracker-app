@@ -1,16 +1,21 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import React from "react";
 import InfoPopper from "./InfoPopper";
 import { AiTwotoneHeart } from "react-icons/ai";
 const useStyles = makeStyles((theme) => ({
   container: {
     width: "100vw",
-    height: "100vh",
+    height: "100%",
     backgroundColor: "#1D1F31",
     color: "#FFF",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
+    
+    [theme.breakpoints.up("sm")]: {
+      alignItems: "center",
+      minHeight: "100vh",
+    },
   },
   fullSvg: {
     width: "100%",

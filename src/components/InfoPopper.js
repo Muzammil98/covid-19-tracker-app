@@ -82,8 +82,8 @@ const useStyles = makeStyles((theme) => ({
 
 const InfoPopper = () => {
   const DESIGN_URL =
-    "https://www.figma.com/file/lhya7sk5vmf7DYaxrezg80/Clean-Expense-Tracker?node-id=117%3A2";
-  const CODE_URL = "https://github.com/Muzammil98/React-Firebase-auth-template";
+    "https://www.figma.com/file/h2caC9ExSrsUL6WBoROP6p/Clean-Covid-19-Tracker-app?node-id=0%3A1";
+  const CODE_URL = "https://github.com/Muzammil98/covid-19-tracker-app";
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
