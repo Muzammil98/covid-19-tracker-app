@@ -1,10 +1,12 @@
-import React from "react";
-import { IconButton, Button, Select } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { IconButton, Button, Select, MenuItem } from "@material-ui/core";
 import DeathSvg from "../../assets/DeathSvg";
 import GermSvg from "../../assets/GermSvg";
 import RecoverySvg from "../../assets/RecoverySvg";
+import CountUp from "react-countup";
 
 import { makeStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "30px",
@@ -55,6 +57,26 @@ const useStyles = makeStyles((theme) => ({
       right: 0,
     },
   },
+  countrySelect: {
+    color: "#8E8E8E",
+    marginBottom: "20px",
+    marginLeft: "4px",
+    width: "200px",
+    "& .MuiSelect-selectMenu": {
+      fontSize: "12px",
+      color: "#8E8E8E",
+      "& ::placeholder": {
+        color: "#8E8E8E",
+        fontSize: "12px",
+      },
+    },
+    "& svg": {
+      color: "#8E8E8E",
+    },
+    "&.MuiInput-root:before": {
+      borderBottomColor: "#585858 !important",
+    },
+  },
   svg: {
     transform: "scale(3)",
     "&.infected": {
@@ -94,14 +116,45 @@ const useStyles = makeStyles((theme) => ({
     color: "#9F9F9F",
   },
 }));
+
+const CountAnimated = ({ value }) => {
+  return (
+    <CountUp
+      // start={-875.039}
+      end={value}
+      duration={3}
+      separator=","
+      // decimals={4}
+      decimal=","
+      delay={0}
+    >
+      {({ countUpRef }) => <span ref={countUpRef} />}
+    </CountUp>
+  );
+};
+
 const MainApp = () => {
   const classes = useStyles();
+
+  useEffect(() => {
+    fetch("https://covid19.mathdro.id/api")
+      .then((res) => res.json())
+      .then((res) => console.log("COVID-19 API::",res))
+      .catch((err) => console.error(err));
+  }, []);
+
+  const [age, setAge] = React.useState("");
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
 
   return (
     <div className={classes.root}>
       <h3 style={{ marginBottom: "30px", fontWeight: "300" }}>
         Covid-19 Cases
       </h3>
+
       <div className={classes.infoMainContainer}>
         <div className={classes.infoContainer}>
           <GermSvg className={classes.svg + " infected"} />
@@ -110,7 +163,9 @@ const MainApp = () => {
             <h3 className={classes.title}>Infected</h3>
           </div>
           <div>
-            <h1 className={classes.casesNumber + " infected"}>945,123</h1>
+            <h1 className={classes.casesNumber + " infected"}>
+              <CountAnimated value={945123} />
+            </h1>
             <h6 className={classes.para}>
               Total no. of infected cases globally
             </h6>
@@ -124,7 +179,9 @@ const MainApp = () => {
             <h3 className={classes.title}>Recovered</h3>
           </div>
           <div>
-            <h1 className={classes.casesNumber + " recovered"}>945,123</h1>
+            <h1 className={classes.casesNumber + " recovered"}>
+              <CountAnimated value={945123} />
+            </h1>
             <h6 className={classes.para}>
               Total no. of recovered cases globally
             </h6>
@@ -138,12 +195,27 @@ const MainApp = () => {
             <h3 className={classes.title}>Deaths</h3>
           </div>
           <div>
-            <h1 className={classes.casesNumber + " deaths"}>945,123</h1>
+            <h1 className={classes.casesNumber + " deaths"}>
+              <CountAnimated value={945123} />
+            </h1>
             <h6 className={classes.para}>Total no. of deaths cases globally</h6>
           </div>
         </div>
       </div>
-      <Select placeholder="Select a country" title="Select a country" />
+      <Select
+        value={age}
+        onChange={handleChange}
+        displayEmpty
+        className={classes.countrySelect}
+      >
+        <MenuItem value="" disabled>
+          Select a country
+        </MenuItem>
+        <MenuItem value={10}>Ten</MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
+      </Select>
+
       <div className={classes.infoContainer}>
         <p>To see country wise cases, please select a country</p>
       </div>

@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import InfoPopper from "./InfoPopper";
 import { AiTwotoneHeart } from "react-icons/ai";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     width: "100vw",
