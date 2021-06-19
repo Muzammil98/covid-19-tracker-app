@@ -7,6 +7,7 @@ import {
   Paper,
   Slide,
   Button,
+  ClickAwayListener,
 } from "@material-ui/core";
 import { AiFillInfoCircle } from "react-icons/ai";
 
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiButton-endIcon": {
       width: "15px",
-      marginRight:"0"
+      marginRight: "0",
     },
   },
   infoButton: {
@@ -107,75 +108,79 @@ const InfoPopper = () => {
         transition
       >
         {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
-            {/* <Slide direction="down" timeout={350} in={open} mountOnEnter unmountOnExit> */}
-            <Paper className={classes.root}>
-              <div className="about-container">
-                <h5 className="heading">About</h5>
-                <p className="para">
-                  Hi, i’m <u>Muzammil</u> a Full-Stack developer and UI/UX designer.
-                  This app was hand-craftedly designed and developed from
-                  scratch
-                </p>
-              </div>
-              <div className="connect-container">
-                <h5 className="heading">Connect with me</h5>
-                <ul className="button-wrapper">
-                  <li className="button-item">
-                    <Button
-                      variant="contained"
-                      href="https://github.com/Muzammil98"
-                      target="_blank"
-                      endIcon={<Github />}
-                      className={classes.btn}
-                      size="small"
-                    >
-                      Profile
-                    </Button>
-                  </li>
-                  <li className="button-item">
-                    <Button
-                      variant="contained"
-                      href="https://www.linkedin.com/in/muzammil-s/"
-                      target="_blank"
-                      endIcon={<Linkedin />}
-                      className={classes.btn}
-                    >
-                      Profile
-                    </Button>
-                  </li>
-                </ul>
-              </div>
-              <div className="connect-container">
-                <h5 className="heading">Source</h5>
-                <ul className="button-wrapper">
-                  <li className="button-item">
-                    <Button
-                      variant="contained"
-                      href={CODE_URL}
-                      target="_blank"
-                      endIcon={<Github />}
-                      className={classes.btn}
-                    >
-                      Code
-                    </Button>
-                  </li>
-                  <li className="button-item">
-                    <Button
-                      variant="contained"
-                      href={DESIGN_URL}
-                      target="_blank"
-                      endIcon={<Figma />}
-                      className={classes.btn}
-                    >
-                      Design
-                    </Button>
-                  </li>
-                </ul>
-              </div>
-            </Paper>
-            {/* </Slide> */}
-          </Fade>
+          <ClickAwayListener
+            touchEvent="onTouchStart"
+            onClickAway={() => setOpen(false)}
+          >
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper className={classes.root}>
+                <div className="about-container">
+                  <h5 className="heading">About</h5>
+                  <p className="para">
+                    Hi, i’m <u>Muzammil</u> a Full-Stack developer and UI/UX
+                    designer. This app was hand-craftedly designed and developed
+                    from scratch
+                  </p>
+                </div>
+                <div className="connect-container">
+                  <h5 className="heading">Connect with me</h5>
+                  <ul className="button-wrapper">
+                    <li className="button-item">
+                      <Button
+                        variant="contained"
+                        href="https://github.com/Muzammil98"
+                        target="_blank"
+                        endIcon={<Github />}
+                        className={classes.btn}
+                        size="small"
+                      >
+                        Profile
+                      </Button>
+                    </li>
+                    <li className="button-item">
+                      <Button
+                        variant="contained"
+                        href="https://www.linkedin.com/in/muzammil-s/"
+                        target="_blank"
+                        endIcon={<Linkedin />}
+                        className={classes.btn}
+                      >
+                        Profile
+                      </Button>
+                    </li>
+                  </ul>
+                </div>
+                <div className="connect-container">
+                  <h5 className="heading">Source</h5>
+                  <ul className="button-wrapper">
+                    <li className="button-item">
+                      <Button
+                        variant="contained"
+                        href={CODE_URL}
+                        target="_blank"
+                        endIcon={<Github />}
+                        className={classes.btn}
+                      >
+                        Code
+                      </Button>
+                    </li>
+                    <li className="button-item">
+                      <Button
+                        variant="contained"
+                        href={DESIGN_URL}
+                        target="_blank"
+                        endIcon={<Figma />}
+                        className={classes.btn}
+                      >
+                        Design
+                      </Button>
+                    </li>
+                  </ul>
+                </div>
+              </Paper>
+              {/* </Slide> */}
+            </Fade>
+          </ClickAwayListener>
         )}
       </Popper>
       <IconButton
