@@ -4,7 +4,7 @@ import DeathSvg from "../../assets/DeathSvg";
 import GermSvg from "../../assets/GermSvg";
 import RecoverySvg from "../../assets/RecoverySvg";
 import CountUp from "react-countup";
-
+import { MONTHS } from "../../utils/misc";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -136,10 +136,35 @@ const CountAnimated = ({ value }) => {
 const MainApp = () => {
   const classes = useStyles();
 
+  const [confirmed, setConfirmed] = useState(0);
+  const [recovered, setRecovered] = useState(0);
+  const [deaths, setDeaths] = useState(0);
+  const [globalLastUpdate, setGlobalLastUpdate] = useState("");
+
   useEffect(() => {
     fetch("https://covid19.mathdro.id/api")
       .then((res) => res.json())
-      .then((res) => console.log("COVID-19 API::",res))
+      .then((res) => {
+        let confirmedCases, recoveredCases, deathCases, date, day, month, year;
+        confirmedCases = res.confirmed.value;
+        recoveredCases = res.recovered.value;
+        deathCases = res.deaths.value;
+
+        day = new Date(res.lastUpdate).getDate();
+        month = new Date(res.lastUpdate).getMonth();
+        month = MONTHS[month];
+        year = new Date(res.lastUpdate).getFullYear();
+
+        date = `${month} ${day}, ${year}`;
+
+        console.log(confirmedCases, recoveredCases, deathCases, date);
+
+        setGlobalLastUpdate(date);
+        setConfirmed(confirmedCases);
+        setRecovered(recoveredCases);
+        setDeaths(deathCases);
+
+      })
       .catch((err) => console.error(err));
   }, []);
 
@@ -159,12 +184,12 @@ const MainApp = () => {
         <div className={classes.infoContainer}>
           <GermSvg className={classes.svg + " infected"} />
           <div>
-            <h6 className={classes.lastUpdated}>Last updated: Feb 27, 2021</h6>
+            <h6 className={classes.lastUpdated}>Last updated: {globalLastUpdate}</h6>
             <h3 className={classes.title}>Infected</h3>
           </div>
           <div>
             <h1 className={classes.casesNumber + " infected"}>
-              <CountAnimated value={945123} />
+              <CountAnimated value={confirmed} />
             </h1>
             <h6 className={classes.para}>
               Total no. of infected cases globally
@@ -175,12 +200,12 @@ const MainApp = () => {
           <RecoverySvg className={classes.svg + " recovered"} />
 
           <div>
-            <h6 className={classes.lastUpdated}>Last updated: Feb 27, 2021</h6>
+            <h6 className={classes.lastUpdated}>Last updated: {globalLastUpdate}</h6>
             <h3 className={classes.title}>Recovered</h3>
           </div>
           <div>
             <h1 className={classes.casesNumber + " recovered"}>
-              <CountAnimated value={945123} />
+              <CountAnimated value={recovered} />
             </h1>
             <h6 className={classes.para}>
               Total no. of recovered cases globally
@@ -191,12 +216,12 @@ const MainApp = () => {
           <DeathSvg className={classes.svg + " deaths"} />
 
           <div>
-            <h6 className={classes.lastUpdated}>Last updated: Feb 27, 2021</h6>
+            <h6 className={classes.lastUpdated}>Last updated: {globalLastUpdate}</h6>
             <h3 className={classes.title}>Deaths</h3>
           </div>
           <div>
             <h1 className={classes.casesNumber + " deaths"}>
-              <CountAnimated value={945123} />
+              <CountAnimated value={deaths} />
             </h1>
             <h6 className={classes.para}>Total no. of deaths cases globally</h6>
           </div>
