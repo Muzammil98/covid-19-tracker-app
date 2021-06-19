@@ -113,7 +113,7 @@ const InfoPopper = () => {
               <div className="about-container">
                 <h5 className="heading">About</h5>
                 <p className="para">
-                  Hi, i’m Muzammil a Full-Stack developer and UI/UX designer.
+                  Hi, i’m <u>Muzammil</u> a Full-Stack developer and UI/UX designer.
                   This app was hand-craftedly designed and developed from
                   scratch
                 </p>
