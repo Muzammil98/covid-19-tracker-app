@@ -4,8 +4,9 @@ import DeathSvg from "../../assets/DeathSvg";
 import GermSvg from "../../assets/GermSvg";
 import RecoverySvg from "../../assets/RecoverySvg";
 import CountUp from "react-countup";
-import { MONTHS } from "../../utils/misc";
+import { MONTHS, formatDate } from "../../utils/misc";
 import { makeStyles } from "@material-ui/core/styles";
+import { Bar } from "react-chartjs-2";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +56,22 @@ const useStyles = makeStyles((theme) => ({
       position: "absolute",
       top: 0,
       right: 0,
+    },
+
+    "&.graph-container": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      maxWidth: "100%",
+      padding: "0",
+      "& p": {
+        fontWeight: "300",
+        color: "#9F9F9F",
+        textAlign: "center",
+      },
+      "& canvas": {
+        maxHeight: "400px !important",
+      },
     },
   },
   countrySelect: {
@@ -133,45 +150,62 @@ const CountAnimated = ({ value }) => {
   );
 };
 
-const MainApp = () => {
+const MainApp = ({ countries }) => {
   const classes = useStyles();
 
   const [confirmed, setConfirmed] = useState(0);
   const [recovered, setRecovered] = useState(0);
   const [deaths, setDeaths] = useState(0);
   const [globalLastUpdate, setGlobalLastUpdate] = useState("");
+  const [country, setCountry] = useState("");
+  const [countryGraphData, setCountryGraphData] = useState({});
+  const [barChartData, setBarChartData] = useState([]);
 
   useEffect(() => {
     fetch("https://covid19.mathdro.id/api")
       .then((res) => res.json())
       .then((res) => {
-        let confirmedCases, recoveredCases, deathCases, date, day, month, year;
+        let confirmedCases, recoveredCases, deathCases, date;
         confirmedCases = res.confirmed.value;
         recoveredCases = res.recovered.value;
         deathCases = res.deaths.value;
 
-        day = new Date(res.lastUpdate).getDate();
-        month = new Date(res.lastUpdate).getMonth();
-        month = MONTHS[month];
-        year = new Date(res.lastUpdate).getFullYear();
-
-        date = `${month} ${day}, ${year}`;
-
-        console.log(confirmedCases, recoveredCases, deathCases, date);
+        date = formatDate(res.lastUpdate);
 
         setGlobalLastUpdate(date);
         setConfirmed(confirmedCases);
         setRecovered(recoveredCases);
         setDeaths(deathCases);
-
       })
       .catch((err) => console.error(err));
   }, []);
 
-  const [age, setAge] = React.useState("");
-
   const handleChange = (event) => {
-    setAge(event.target.value);
+    let countryName = event.target.value;
+
+    setCountry(countryName);
+
+    fetch(`https://covid19.mathdro.id/api/countries/${countryName}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const { confirmed, deaths, recovered, lastUpdate } = data;
+
+        const modifiedCountryData = {
+          confirmed: confirmed.value,
+          deaths: deaths.value,
+          recovered: recovered.value,
+          lastUpdate: formatDate(lastUpdate),
+        };
+        let barArray = [];
+        barArray.push(confirmed.value);
+        barArray.push(recovered.value);
+        barArray.push(deaths.value);
+
+        console.log("BAR ARRAY", barArray);
+        setBarChartData(barArray);
+        setCountryGraphData(modifiedCountryData);
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -184,7 +218,9 @@ const MainApp = () => {
         <div className={classes.infoContainer}>
           <GermSvg className={classes.svg + " infected"} />
           <div>
-            <h6 className={classes.lastUpdated}>Last updated: {globalLastUpdate}</h6>
+            <h6 className={classes.lastUpdated}>
+              Last updated: {globalLastUpdate}
+            </h6>
             <h3 className={classes.title}>Infected</h3>
           </div>
           <div>
@@ -200,7 +236,9 @@ const MainApp = () => {
           <RecoverySvg className={classes.svg + " recovered"} />
 
           <div>
-            <h6 className={classes.lastUpdated}>Last updated: {globalLastUpdate}</h6>
+            <h6 className={classes.lastUpdated}>
+              Last updated: {globalLastUpdate}
+            </h6>
             <h3 className={classes.title}>Recovered</h3>
           </div>
           <div>
@@ -216,7 +254,9 @@ const MainApp = () => {
           <DeathSvg className={classes.svg + " deaths"} />
 
           <div>
-            <h6 className={classes.lastUpdated}>Last updated: {globalLastUpdate}</h6>
+            <h6 className={classes.lastUpdated}>
+              Last updated: {globalLastUpdate}
+            </h6>
             <h3 className={classes.title}>Deaths</h3>
           </div>
           <div>
@@ -228,7 +268,7 @@ const MainApp = () => {
         </div>
       </div>
       <Select
-        value={age}
+        value={country}
         onChange={handleChange}
         displayEmpty
         className={classes.countrySelect}
@@ -236,13 +276,59 @@ const MainApp = () => {
         <MenuItem value="" disabled>
           Select a country
         </MenuItem>
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
+        {countries.map((country, i) => (
+          <MenuItem key={i} value={country}>
+            {country}
+          </MenuItem>
+        ))}
       </Select>
 
-      <div className={classes.infoContainer}>
-        <p>To see country wise cases, please select a country</p>
+      <div className={classes.infoContainer + " graph-container"}>
+        {country ? (
+          <Bar
+            data={{
+              labels: ["Infected", "Recovered", "Death"],
+              datasets: [
+                {
+                  label: country,
+                  data: barChartData,
+                  backgroundColor: [
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(255, 99, 132, 0.2)",
+                  ],
+                  borderColor: [
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(255, 99, 132, 1)",
+                  ],
+                  borderWidth: 1,
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+
+              scales: {
+                x: {
+                  grid: {
+                    display: false,
+                  },
+                },
+                y: {
+                  grid: {
+                    display: false,
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              },
+            }}
+          />
+        ) : (
+          <p>To see country wise cases, please select a country</p>
+        )}
       </div>
     </div>
   );

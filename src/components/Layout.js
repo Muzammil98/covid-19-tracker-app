@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",
-    
+
     [theme.breakpoints.up("sm")]: {
       alignItems: "center",
       minHeight: "100vh",
@@ -39,20 +39,20 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "10px",
     fontWeight: "200",
     zIndex: 99,
-    display: "flex",
     justifyContent: "center",
     alignItems: "center",
     color: "#cabfbf",
-    position: "absolute",
-    [theme.breakpoints.up('sm')]:{
-      right:"20px",
-      
+    position: "fixed",
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      right: "20px",
+      display: "flex",
     },
     bottom: "20px",
     "& .heart": {
       color: "#d03232",
       fontSize: "12px",
-      marginLeft:"5px"
+      marginLeft: "5px",
     },
   },
 }));

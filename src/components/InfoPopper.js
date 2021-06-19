@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiButton-endIcon": {
       width: "15px",
+      marginRight:"0"
     },
   },
   infoButton: {

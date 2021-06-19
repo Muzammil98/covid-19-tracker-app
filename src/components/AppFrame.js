@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MainApp from "../containers/MainApp";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,10 +28,21 @@ const useStyles = makeStyles((theme) => ({
 
 const AppFrame = () => {
   const classes = useStyles();
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    fetch("https://covid19.mathdro.id/api/countries")
+      .then((res) => res.json())
+      .then((res) => {
+        let modifiedCountries = res.countries.map((country) => country.name);
+        setCountries(modifiedCountries);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <div className={classes.appFrameContainer}>
-      <MainApp />
+      <MainApp countries={countries} />
     </div>
   );
 };

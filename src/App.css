@@ -1,9 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
 }
 
+*::-webkit-scrollbar {
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #8a0b4d;
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: black;
+}
